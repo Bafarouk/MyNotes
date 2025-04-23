@@ -9,11 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,16 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
         noteContainer = findViewById(R.id.notesContainer);
         Button saveButton = findViewById(R.id.saveButton);
+        noteList = new ArrayList<>();
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveNote();
-            }
-        });
+        saveButton.setOnClickListener(v -> saveNote());
 
-        displayNotes();
         loadNotesFromPreferences();
+        displayNotes();
 
 
     }
@@ -109,17 +107,32 @@ public class MainActivity extends AppCompatActivity {
         titleTextView.setText(note.getTitle());
         contentTextView.setText(note.getContent());
 
-        noteView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showDeleteDialog();
-                return true;
-            }
+        noteView.setOnLongClickListener(v -> {
+            showDeleteDialog(note);
+            return true;
         });
+
+        noteContainer.addView(noteView);
     }
 
-    private void showDeleteDialog() {
+    private void showDeleteDialog(Note note) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete this note.");
+        builder.setMessage("Are you sure you want to delete this note?");
+        builder.setPositiveButton("Delete", (dialog, which) -> deleteNoteAndRefresh(note));
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
 
+    private void deleteNoteAndRefresh(Note note) {
+        noteList.remove(note);
+        saveNotesToPreferences();
+        refreshNoteViews();
+    }
+
+    private void refreshNoteViews() {
+        noteContainer.removeAllViews();
+        displayNotes();
     }
 
     private void saveNotesToPreferences() {

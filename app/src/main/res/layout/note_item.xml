@@ -2,20 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:layout_height="match_parent">
+    android:padding="16dp"
+    android:background="@drawable/note_bg"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="8dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
         />
 
     <TextView
         android:id="@+id/contentTextView"
         android:layout_width="match_parent"
-        android:paddingTop="16dp"
+        android:paddingTop="4dp"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
